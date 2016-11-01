@@ -4,6 +4,14 @@
 
 set -e
 
+# Environment variables must be provided
+if [ -z ${PASSWORD+x} ] ; then
+    echo "PASSWORD must be provided"
+    exit 2
+fi
+
+chmod a+rwx -R /data/
+
 # Handle special flags if we're root
 if [ $UID == 0 ] ; then
     # Change UID of NB_USER to NB_UID if it does not match

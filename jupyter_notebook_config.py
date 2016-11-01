@@ -1,9 +1,10 @@
-# Copyright (c) Jupyter Development Team.
+    # Copyright (c) Jupyter Development Team.
 from jupyter_core.paths import jupyter_data_dir
 import subprocess
 import os
 import errno
 import stat
+import json
 
 PEM_FILE = os.path.join(jupyter_data_dir(), 'notebook.pem')
 
@@ -37,3 +38,13 @@ if 'PASSWORD' in os.environ:
     from IPython.lib import passwd
     c.NotebookApp.password = passwd(os.environ['PASSWORD'])
     del os.environ['PASSWORD']
+
+# Fake Script
+print(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'))
+with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'r') as notebook_file:
+    data = json.load(notebook_file)
+    if 'SCRIPT' in os.environ:
+        data['cells'][0]['source'] = os.environ['SCRIPT']
+
+with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'w') as notebook_file:
+    json.dump(data, notebook_file)
