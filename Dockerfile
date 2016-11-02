@@ -144,9 +144,7 @@ COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /home/$NB_USER/.jupyter/
 COPY notebook.ipynb /home/$NB_USER/work/
 RUN chown -R $NB_USER:users /home/$NB_USER/.jupyter && \
-    chown -R $NB_USER:users /home/$NB_USER/work/notebook.ipynb && \
-    mkdir /data/ && \
-    chmod a+rw /data/ 
+    chown -R $NB_USER:users /home/$NB_USER/work/notebook.ipynb
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_USER
