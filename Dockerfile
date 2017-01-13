@@ -143,6 +143,8 @@ COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /home/$NB_USER/.jupyter/
 COPY notebook.ipynb /home/$NB_USER/work/
+COPY wait-for-it.sh /tmp/
+
 RUN chown -R $NB_USER:users /home/$NB_USER/.jupyter && \
     chown -R $NB_USER:users /home/$NB_USER/work/notebook.ipynb && \
     mkdir /data/ && \
