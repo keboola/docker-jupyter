@@ -148,7 +148,7 @@ COPY wait-for-it.sh /tmp/
 RUN chown -R $NB_USER:users /home/$NB_USER/.jupyter && \
     chown -R $NB_USER:users /home/$NB_USER/work/notebook.ipynb && \
     mkdir /data/ && \
-    chmod a+rw /data/ 
+    usermod -a -G root $NB_USER
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_USER
