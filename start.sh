@@ -10,6 +10,8 @@ if [ -z ${PASSWORD+x} ] ; then
     exit 2
 fi
 
+chmod a+rw -R /data/ 
+
 # Handle special flags if we're root
 if [ $UID == 0 ] ; then
     # Change UID of NB_USER to NB_UID if it does not match
