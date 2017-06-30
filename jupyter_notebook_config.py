@@ -1,10 +1,12 @@
-    # Copyright (c) Jupyter Development Team.
+# Copyright (c) Jupyter Development Team.
 from jupyter_core.paths import jupyter_data_dir
 import subprocess
 import os
 import errno
 import stat
 import json
+from kbc_transformation import transformation
+from keboola import docker
 
 PEM_FILE = os.path.join(jupyter_data_dir(), 'notebook.pem')
 
@@ -40,11 +42,40 @@ if 'PASSWORD' in os.environ:
     del os.environ['PASSWORD']
 
 # Fake Script
-print(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'))
-with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'r') as notebook_file:
-    data = json.load(notebook_file)
-    if 'SCRIPT' in os.environ:
+if 'SCRIPT' in os.environ:
+    print('Loading script into notebook');
+    print(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'))
+    with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'r') as notebook_file:
+        data = json.load(notebook_file)
         data['cells'][0]['source'] = os.environ['SCRIPT']
+    with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'w') as notebook_file:
+        json.dump(data, notebook_file)
 
-with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'w') as notebook_file:
-    json.dump(data, notebook_file)
+# Install packages
+app = transformation.App()
+try:
+    if 'PACKAGES' in os.environ:
+        print('Loading packages "' + os.environ['PACKAGES'] + '"')
+        packages = json.loads(os.environ['PACKAGES'])
+        if isinstance(packages, list):
+            app.install_packages(packages)
+        else:
+            print('Packages are not array.')
+except ValueError as err:
+    print('Tags is not JSON array.')
+
+try:
+    if 'TAGS' in os.environ:
+        print('Loading tagged files from "' + os.environ['TAGS'] + '"')
+        tags = json.loads(os.environ['TAGS'])
+        if isinstance(tags, list):
+            # create fake config file
+            with open(os.path.join('/data/', 'config.json'), 'w') as config_file:
+                json.dump({'parameters': []}, config_file)
+            cfg = docker.Config('/data/')
+            app.prepare_tagged_files(cfg, tags)
+            os.remove('/data/config.json')
+        else:
+            print('Tags are not an array.')
+except ValueError as err:
+    print('Tags is not JSON array.')

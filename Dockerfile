@@ -1,4 +1,4 @@
-FROM quay.io/keboola/base-python:3.5.2-b
+FROM quay.io/keboola/docker-custom-python:1.3.1
 
 # Taken from https://github.com/jupyter/docker-stacks/blob/master/minimal-notebook/Dockerfile
 # Taken from https://github.com/jupyter/docker-stacks/blob/master/scipy-notebook/Dockerfile
@@ -127,6 +127,10 @@ RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
 # Configure ipython kernel to use matplotlib inline backend by default
 RUN mkdir -p $HOME/.ipython/profile_default/startup
 COPY mplimporthook.py $HOME/.ipython/profile_default/startup/
+
+# Install KBC Transformation package
+RUN pip install --upgrade git+git://github.com/keboola/python-transformation.git@1.1.0 \
+    && pip install --upgrade git+git://github.com/keboola/python-docker-application.git@2.0.0
 
 USER root
 
