@@ -17,7 +17,8 @@ else:
     c.NotebookApp.ip = '*'
 c.NotebookApp.port = 8888
 c.NotebookApp.open_browser = False
-c.NotebookApp.notebook_dir = '/notebooks/'
+# This changes current working dir, so has to be set to /data/
+c.NotebookApp.notebook_dir = '/data/'
 c.Session.debug = False
 # Disabled because it breaks notebook_dir
 #c.FileContentsManager.root_dir = '/data'
@@ -56,11 +57,11 @@ if 'PASSWORD' in os.environ:
 # jupyter trust /path/to/notebook.ipynb
 # Fake Script
 print('Loading script into notebook', file=sys.stderr);
-with open(os.path.join('/notebooks/notebook.ipynb'), 'r') as notebook_file:
+with open(os.path.join('/tmp/notebook.ipynb'), 'r') as notebook_file:
     data = json.load(notebook_file)
     if 'SCRIPT' in os.environ:
         data['cells'][0]['source'] = os.environ['SCRIPT']
-with open(os.path.join('/notebooks/notebook.ipynb'), 'w') as notebook_file:
+with open(os.path.join('/data/notebook.ipynb'), 'w') as notebook_file:
     json.dump(data, notebook_file)
 
 # Install packages

@@ -147,7 +147,7 @@ RUN pip install --upgrade git+git://github.com/keboola/python-transformation.git
     && pip install --upgrade git+git://github.com/keboola/python-docker-application.git@2.0.0
 
 EXPOSE 8888
-WORKDIR /home/$NB_USER/work
+WORKDIR /data/
 
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
@@ -158,12 +158,11 @@ COPY start.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
-COPY notebook.ipynb /notebooks/
+COPY notebook.ipynb /tmp/
 COPY wait-for-it.sh /usr/local/bin/
 
 RUN chown -R $NB_USER:users /etc/jupyter/ \
-    && mkdir -p /notebooks/ \
-    && chown -R $NB_USER:users /notebooks/ \
-    && chown -R $NB_USER:users /notebooks/notebook.ipynb
+    && chown -R $NB_USER:users /tmp/ \
+    && chown -R $NB_USER:users /tmp/notebook.ipynb
 
 USER $NB_USER
