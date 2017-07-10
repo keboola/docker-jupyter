@@ -10,8 +10,6 @@ if [ -z ${PASSWORD+x} ] ; then
     exit 2
 fi
 
-chmod a+rw -R /data/ 
-cd /data/
 /usr/local/bin/wait-for-it.sh -t 0 data-loader:80 -- echo "Data loader is up"
 #jupyter trust /notebooks/notebook.ipynb
 

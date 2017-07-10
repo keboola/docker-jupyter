@@ -30,8 +30,6 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 
 # Taken from https://github.com/jupyter/docker-stacks/tree/master/base-notebook
 
-USER root
-
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
@@ -61,22 +59,12 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.10.0/tini 
 ENV CONDA_DIR /opt/conda
 ENV PATH $CONDA_DIR/bin:$PATH
 ENV SHELL /bin/bash
-ENV NB_USER jovyan
-ENV NB_UID 1000
+ENV NB_USER root
+ENV NB_UID 0
 ENV HOME /home/$NB_USER
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
-
-# Create jovyan user with UID=1000 and in the 'users' group
-RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
-    mkdir -p $CONDA_DIR && \
-    chown $NB_USER $CONDA_DIR
-
-USER $NB_USER
-
-# Setup work directory for backward-compatibility
-RUN mkdir /home/$NB_USER/work
 
 # Install conda as jovyan and check the md5 sum provided on the download site
 ENV MINICONDA_VERSION 4.3.21
@@ -164,5 +152,3 @@ COPY wait-for-it.sh /usr/local/bin/
 RUN chown -R $NB_USER:users /etc/jupyter/ \
     && chown -R $NB_USER:users /tmp/ \
     && chown -R $NB_USER:users /tmp/notebook.ipynb
-
-USER $NB_USER

@@ -20,6 +20,8 @@ c.NotebookApp.open_browser = False
 # This changes current working dir, so has to be set to /data/
 c.NotebookApp.notebook_dir = '/data/'
 c.Session.debug = False
+# If not set, there is a permission problem with the /data/ directory
+c.NotebookApp.allow_root = True
 # Disabled because it breaks notebook_dir
 #c.FileContentsManager.root_dir = '/data'
 
