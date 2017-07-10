@@ -42,14 +42,14 @@ if 'PASSWORD' in os.environ:
     del os.environ['PASSWORD']
 
 # Fake Script
-if 'SCRIPT' in os.environ:
-    print('Loading script into notebook');
-    print(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'))
-    with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'r') as notebook_file:
-        data = json.load(notebook_file)
-        data['cells'][0]['source'] = os.environ['SCRIPT']
-    with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'w') as notebook_file:
-        json.dump(data, notebook_file)
+print("Creating notebook")
+with open(os.path.join('/home/', os.environ['NB_USER'], 'work/notebook.ipynb'), 'r') as notebook_file:
+    data = json.load(notebook_file)
+    if 'SCRIPT' in os.environ:
+        print('Loading script into notebook');
+        data['cells'][0]['source'] = os.environ['SCRIPT']    
+with open('/data/notebook.ipynb', 'w') as notebook_file:
+    json.dump(data, notebook_file)
 
 # Install packages
 app = transformation.App()

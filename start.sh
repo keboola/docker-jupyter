@@ -11,7 +11,6 @@ if [ -z ${PASSWORD+x} ] ; then
 fi
 
 chmod a+rw -R /data/ 
-cd /data/
 /tmp/wait-for-it.sh -t 0 data-loader:80 -- echo "Data loader is up"
 
 # Handle special flags if we're root
