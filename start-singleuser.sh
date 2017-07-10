@@ -10,8 +10,8 @@ then
     notebook_arg="--notebook-dir=${NOTEBOOK_DIR}"
 fi
 
-exec jupyterhub-singleuser \
-  --port=8888 \
+. /usr/local/bin/start.sh jupyterhub-singleuser \
+  --port=${JPY_PORT:-8888} \
   --ip=0.0.0.0 \
   --user=$JPY_USER \
   --cookie-name=$JPY_COOKIE_NAME \

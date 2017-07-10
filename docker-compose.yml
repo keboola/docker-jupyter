@@ -1,0 +1,17 @@
+version: "2"
+
+services:
+  data-loader:
+    image: php:7-apache
+  jupyter:
+    build: .
+    links:
+      - data-loader
+    ports:
+      - "8888:8888"
+    environment:
+      - USER=test
+      - PASSWORD=test
+      - SCRIPT=thisisascripttest
+    volumes:
+      - ./data/:/data/
