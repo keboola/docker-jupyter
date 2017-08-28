@@ -77,7 +77,7 @@ try:
         else:
             print('Packages are not array.', file=sys.stderr)
 except ValueError as err:
-    print('Tags is not JSON array.', file=sys.stderr)
+    print('Packages is not JSON array.', file=sys.stderr)
 
 try:
     if 'TAGS' in os.environ:
