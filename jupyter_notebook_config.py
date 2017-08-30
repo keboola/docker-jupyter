@@ -68,29 +68,29 @@ with open(os.path.join('/data/notebook.ipynb'), 'w') as notebook_file:
 
 # Install packages
 app = transformation.App()
-try:
-    if 'PACKAGES' in os.environ:
-        print('Loading packages "' + os.environ['PACKAGES'] + '"', file=sys.stderr)
+if 'PACKAGES' in os.environ:
+    print('Loading packages "' + os.environ['PACKAGES'] + '"', file=sys.stderr)
+    try:
         packages = json.loads(os.environ['PACKAGES'])
-        if isinstance(packages, list):
-            app.install_packages(packages)
-        else:
-            print('Packages are not array.', file=sys.stderr)
-except ValueError as err:
-    print('Packages is not JSON array.', file=sys.stderr)
+    except ValueError as err:
+        print('Packages is not JSON array.', file=sys.stderr)
+    if isinstance(packages, list):
+        app.install_packages(packages)
+    else:
+        print('Packages are not array.', file=sys.stderr)
 
-try:
-    if 'TAGS' in os.environ:
-        print('Loading tagged files from "' + os.environ['TAGS'] + '"', file=sys.stderr)
+if 'TAGS' in os.environ:
+    print('Loading tagged files from "' + os.environ['TAGS'] + '"', file=sys.stderr)
+    try:
         tags = json.loads(os.environ['TAGS'])
-        if isinstance(tags, list):
-            # create fake config file
-            with open(os.path.join('/data/', 'config.json'), 'w') as config_file:
-                json.dump({'parameters': []}, config_file)
-            cfg = docker.Config('/data/')
-            app.prepare_tagged_files(cfg, tags)
-            os.remove('/data/config.json')
-        else:
-            print('Tags are not an array.', file=sys.stderr)
-except ValueError as err:
-    print('Tags is not JSON array.', file=sys.stderr)
+    except ValueError as err:
+        print('Tags is not JSON array.', file=sys.stderr)
+    if isinstance(tags, list):
+        # create fake config file
+        with open(os.path.join('/data/', 'config.json'), 'w') as config_file:
+            json.dump({'parameters': []}, config_file)
+        cfg = docker.Config('/data/')
+        app.prepare_tagged_files(cfg, tags)
+        os.remove('/data/config.json')
+    else:
+        print('Tags are not an array.', file=sys.stderr)

@@ -2,10 +2,20 @@ version: "2"
 
 services:
   data-loader:
-    image: php:7-apache
-  jupyter:
+    image: quay.io/keboola/data-loader
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./data:/data/
+    environment:
+      - KBC_EXPORT_CONFIG={"storage":{"input":{"files":[{"tags":["pokus"]}]}}}
+      - KBC_TOKEN
+  sandbox:
     build: .
-    links:
+    image: keboola/docker-jupyter
+    tty: true
+    stdin_open: true
+    volumes_from:
       - data-loader
     ports:
       - "8888:8888"
@@ -13,5 +23,5 @@ services:
       - USER=test
       - PASSWORD=test
       - SCRIPT=thisisascripttest
-    volumes:
-      - ./data/:/data/
+      - TAGS=["pokus"]
+      - PACKAGES=["ccxt"]
