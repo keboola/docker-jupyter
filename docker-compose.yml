@@ -1,0 +1,27 @@
+version: "2"
+
+services:
+  data-loader:
+    image: quay.io/keboola/data-loader
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./data:/data/
+    environment:
+      - KBC_CONFIG_ID=319068939
+      - KBC_ROW_ID=319068990
+      - KBC_ROW_VERSION=4
+      - KBC_TOKEN
+  sandbox:
+    build: .
+    image: keboola/docker-jupyter
+    tty: true
+    stdin_open: true
+    volumes_from:
+      - data-loader
+    ports:
+      - "8888:8888"
+    environment:
+      - PASSWORD=test
+      - TAGS=["cat"]
+      - PACKAGES=["ccxt"]
