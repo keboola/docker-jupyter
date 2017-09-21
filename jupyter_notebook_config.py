@@ -27,7 +27,7 @@ c.NotebookApp.allow_root = True
 
 print("Initializing Jupyter", file=sys.stderr)
 
-# Generate a self-signed certificate
+# Generate a self-signed certificate 
 if 'GEN_CERT' in os.environ:
     dir_name = jupyter_data_dir()
     pem_file = os.path.join(dir_name, 'notebook.pem')
@@ -58,13 +58,23 @@ if 'PASSWORD' in os.environ:
 
 # jupyter trust /path/to/notebook.ipynb
 # Fake Script
-print('Loading script into notebook', file=sys.stderr);
-with open(os.path.join('/tmp/notebook.ipynb'), 'r') as notebook_file:
-    data = json.load(notebook_file)
-    if 'SCRIPT' in os.environ:
-        data['cells'][0]['source'] = os.environ['SCRIPT']
-with open(os.path.join('/data/notebook.ipynb'), 'w') as notebook_file:
-    json.dump(data, notebook_file)
+try:
+    print('Loading script into notebook', file=sys.stderr)
+    with open(os.path.join('/tmp/notebook.ipynb'), 'r') as notebook_file:
+        data = json.load(notebook_file)
+        if 'SCRIPT' in os.environ:
+            print('Loading script from environment', file=sys.stderr)
+            data['cells'][0]['source'] = os.environ['SCRIPT']
+        if os.path.isfile('/data/main.py'):
+            print('Loading script from file', file=sys.stderr)
+            with open('/data/main.py') as file:
+                script = file.read()
+            data['cells'][0]['source'] = script
+    with open(os.path.join('/data/notebook.ipynb'), 'w') as notebook_file:
+        json.dump(data, notebook_file)
+except:
+    print('Failed to load script', sys.exc_info()[0], file=sys.stderr)
+    sys.exit(120)
 
 # Install packages
 app = transformation.App()
@@ -74,8 +84,13 @@ if 'PACKAGES' in os.environ:
         packages = json.loads(os.environ['PACKAGES'])
     except ValueError as err:
         print('Packages is not JSON array.', file=sys.stderr)
+        sys.exit(121)
     if isinstance(packages, list):
-        app.install_packages(packages)
+        try:
+            app.install_packages(packages)
+        except ValueError as err:
+            print('Failed to insall packages', err, file=sys.stderr)
+            sys.exit(122)
     else:
         print('Packages are not array.', file=sys.stderr)
 
@@ -85,12 +100,17 @@ if 'TAGS' in os.environ:
         tags = json.loads(os.environ['TAGS'])
     except ValueError as err:
         print('Tags is not JSON array.', file=sys.stderr)
+        sys.exit(123)
     if isinstance(tags, list):
         # create fake config file
-        with open(os.path.join('/data/', 'config.json'), 'w') as config_file:
-            json.dump({'parameters': []}, config_file)
-        cfg = docker.Config('/data/')
-        app.prepare_tagged_files(cfg, tags)
-        os.remove('/data/config.json')
+        try:
+            with open(os.path.join('/data/', 'config.json'), 'w') as config_file:
+                json.dump({'parameters': []}, config_file)
+            cfg = docker.Config('/data/')
+            app.prepare_tagged_files(cfg, tags)
+            os.remove('/data/config.json')
+        except ValueError as err:
+            print('Failed to prepare files', err, file=sys.stderr)
+            sys.exit(124)
     else:
         print('Tags are not an array.', file=sys.stderr)
