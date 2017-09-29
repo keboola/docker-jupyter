@@ -34,7 +34,7 @@ if 'PASSWORD' in os.environ and os.environ['PASSWORD']:
     del os.environ['PASSWORD']
 else:
     print('Password must be provided.')
-    sys.exit(120)
+    sys.exit(150)
 
 # jupyter trust /path/to/notebook.ipynb
 # Create a Fake Script
@@ -56,7 +56,7 @@ try:
         json.dump(data, notebook_file)
 except:
     print('Failed to load script.', sys.exc_info()[0], file=sys.stderr)
-    sys.exit(121)
+    sys.exit(151)
 
 # Install packages
 app = transformation.App()
@@ -66,13 +66,13 @@ if 'PACKAGES' in os.environ:
         packages = json.loads(os.environ['PACKAGES'])
     except ValueError as err:
         print('Packages variable is not a JSON array.', file=sys.stderr)
-        sys.exit(122)
+        sys.exit(152)
     if isinstance(packages, list):
         try:
             app.install_packages(packages)
         except ValueError as err:
             print('Failed to install packages', err, file=sys.stderr)
-            sys.exit(123)
+            sys.exit(153)
     else:
         print('Packages variable is not an array.', file=sys.stderr)
 
@@ -82,7 +82,7 @@ if 'TAGS' in os.environ:
         tags = json.loads(os.environ['TAGS'])
     except ValueError as err:
         print('Tags variable is not a JSON array.', file=sys.stderr)
-        sys.exit(124)
+        sys.exit(154)
     if isinstance(tags, list):
         # create fake config file
         try:
@@ -93,6 +93,6 @@ if 'TAGS' in os.environ:
             os.remove('/data/config.json')
         except ValueError as err:
             print('Failed to prepare files', err, file=sys.stderr)
-            sys.exit(125)
+            sys.exit(155)
     else:
         print('Tags variable is not an array.', file=sys.stderr)
