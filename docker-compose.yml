@@ -8,9 +8,9 @@ services:
     volumes:
       - ./data:/data/
     environment:
-      - KBC_CONFIG_ID=319068939
-      - KBC_ROW_ID=319068990
-      - KBC_ROW_VERSION=4
+      - KBC_CONFIG_ID
+      - KBC_ROW_ID
+      - KBC_CONFIG_VERSION
       - KBC_TOKEN
   sandbox:
     build: .

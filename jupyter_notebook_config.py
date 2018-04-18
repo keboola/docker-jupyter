@@ -23,7 +23,7 @@ c.Session.debug = False
 # If not set, there is a permission problem with the /data/ directory
 c.NotebookApp.allow_root = True
 # Disabled because it breaks notebook_dir
-#c.FileContentsManager.root_dir = '/data'
+# c.FileContentsManager.root_dir = '/data'
 
 print("Initializing Jupyter.", file=sys.stderr)
 
@@ -40,7 +40,7 @@ else:
 # Create a Fake Script
 try:
     print('Loading script into notebook.', file=sys.stderr)
-    with open(os.path.join('/tmp/notebook.ipynb'), 'r') as notebook_file:
+    with open(os.path.join('/init-jupy/notebook.ipynb'), 'r') as notebook_file:
         data = json.load(notebook_file)
         # Legacy - Load script from environment (8kb limit)
         if 'SCRIPT' in os.environ:
