@@ -93,10 +93,12 @@ RUN pip3 install --no-cache-dir \
     h5py \
     vincent \
     beautifulsoup4 \
-    xlrd 
+    xlrd \
+    qgrid
 
 # Activate ipywidgets extension in the environment that runs the notebook server
-RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix
+RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix \
+ && jupyter nbextension enable --py --sys-prefix qgrid
 
 # Import matplotlib the first time to build the font cache.
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
