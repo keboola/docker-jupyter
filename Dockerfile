@@ -1,4 +1,4 @@
-FROM quay.io/keboola/docker-custom-python:1.5.1
+FROM quay.io/keboola/docker-custom-python:1.5.5
 
 # Taken from https://github.com/jupyter/docker-stacks/blob/master/minimal-notebook/Dockerfile
 
@@ -33,9 +33,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
-RUN REPO=http://cdn-fastly.deb.debian.org \
- && echo "deb $REPO/debian jessie main\ndeb $REPO/debian-security jessie/updates main" > /etc/apt/sources.list \
- && apt-get update && apt-get -yq dist-upgrade \
+RUN apt-get update && apt-get -yq dist-upgrade \
  && apt-get install -yq --no-install-recommends \
     wget \
     bzip2 \
@@ -109,7 +107,7 @@ USER root
 ### Custom stuff 
 
 # Install KBC Transformation package
-RUN pip3 install --no-cache-dir --upgrade git+git://github.com/keboola/python-transformation.git@1.1.0
+RUN pip3 install --no-cache-dir --upgrade git+git://github.com/keboola/python-transformation.git@1.1.13
 
 EXPOSE 8888
 WORKDIR /data/
