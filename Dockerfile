@@ -1,4 +1,4 @@
-FROM quay.io/keboola/docker-custom-python:1.5.8
+FROM quay.io/keboola/docker-custom-python:1.5.9
 
 # Taken from https://github.com/jupyter/docker-stacks/blob/master/minimal-notebook/Dockerfile
 
