@@ -38,25 +38,26 @@ else:
 
 # jupyter trust /path/to/notebook.ipynb
 # Create a Fake Script
-try:
-    print('Loading script into notebook.', file=sys.stderr)
-    with open(os.path.join('/init-jupy/notebook.ipynb'), 'r') as notebook_file:
-        data = json.load(notebook_file)
-        # Legacy - Load script from environment (8kb limit)
-        if 'SCRIPT' in os.environ:
-            print('Loading script from environment.', file=sys.stderr)
-            data['cells'][0]['source'] = os.environ['SCRIPT']
-        # Load script from data directory (path is hardcoded in data-loader)
-        if os.path.isfile('/data/main.py'):
-            print('Loading script from file.', file=sys.stderr)
-            with open('/data/main.py') as file:
-                script = file.read()
-            data['cells'][0]['source'] = script
-    with open(os.path.join('/data/notebook.ipynb'), 'w') as notebook_file:
-        json.dump(data, notebook_file)
-except:
-    print('Failed to load script.', sys.exc_info()[0], file=sys.stderr)
-    sys.exit(151)
+if not os.path.isfile('/data/notebook.ipynb'):
+    try:
+        print('Loading script into notebook.', file=sys.stderr)
+        with open(os.path.join('/init-jupy/notebook.ipynb'), 'r') as notebook_file:
+            data = json.load(notebook_file)
+            # Legacy - Load script from environment (8kb limit)
+            if 'SCRIPT' in os.environ:
+                print('Loading script from environment.', file=sys.stderr)
+                data['cells'][0]['source'] = os.environ['SCRIPT']
+            # Load script from data directory (path is hardcoded in data-loader)
+            if os.path.isfile('/data/main.py'):
+                print('Loading script from file.', file=sys.stderr)
+                with open('/data/main.py') as file:
+                    script = file.read()
+                data['cells'][0]['source'] = script
+        with open(os.path.join('/data/notebook.ipynb'), 'w') as notebook_file:
+            json.dump(data, notebook_file)
+    except:
+        print('Failed to load script.', sys.exc_info()[0], file=sys.stderr)
+        sys.exit(151)
 
 # Install packages
 app = transformation.App()
