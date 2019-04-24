@@ -121,8 +121,6 @@ COPY start.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
-COPY notebook.ipynb /init-jupy/
 COPY wait-for-it.sh /usr/local/bin/
 
-RUN chown -R $NB_USER:users /etc/jupyter/ \
-    && chown -R $NB_USER:users /init-jupy/notebook.ipynb
+RUN chown -R $NB_USER:users /etc/jupyter/
