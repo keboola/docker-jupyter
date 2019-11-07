@@ -144,6 +144,7 @@ RUN pip3 install --no-cache-dir --upgrade --user git+git://github.com/keboola/py
 
 EXPOSE 8888
 WORKDIR /data/
+RUN fix-permissions /data
 
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
