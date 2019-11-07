@@ -5,6 +5,8 @@ ARG NB_UID="1000"
 ARG NB_GID="100"
 ENV NB_USER=$NB_USER
 
+RUN echo $NB_USER
+
 USER root
 
 # Taken from https://github.com/jupyter/docker-stacks/blob/master/minimal-notebook/Dockerfile
