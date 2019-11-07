@@ -56,7 +56,6 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 
 # Configure environment
 ENV SHELL /bin/bash
-ENV NB_USER $NB_USER
 ENV NB_UID $NB_UID
 ENV NB_GID $NB_GID
 ENV HOME /home/$NB_USER
