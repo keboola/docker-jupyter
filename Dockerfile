@@ -1,8 +1,9 @@
 FROM quay.io/keboola/docker-custom-python:1.5.11
 
-ARG NB_USER="jupyuser"
+ARG NB_USER
 ARG NB_UID="1000"
 ARG NB_GID="100"
+ENV NB_USER=$NB_USER
 
 USER root
 

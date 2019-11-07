@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   data-loader:
@@ -6,7 +6,7 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - ./data:/data/
+      - data:/data/
     environment:
       - KBC_CONFIG_ID
       - KBC_ROW_ID
@@ -14,15 +14,21 @@ services:
       - KBC_TOKEN
       - KBC_STORAGEAPI_URL
   sandbox:
-    build: .
+    build:
+      context: .
+      args:
+        NB_USER: ${NB_USER}
     image: keboola/docker-jupyter
     tty: true
     stdin_open: true
-    volumes_from:
-      - data-loader
+    volumes:
+      - data:/data/
     ports:
       - "8888:8888"
     environment:
       - PASSWORD=test
       - TAGS=[]
       - PACKAGES=[]
+
+volumes:
+  data:
