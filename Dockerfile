@@ -126,8 +126,6 @@ RUN pip3 install --no-cache-dir \
     xlrd \
     qgrid
 
-RUN fix-permissions /etc/jupyter
-
 # Activate ipywidgets extension in the environment that runs the notebook server
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix \
  && jupyter nbextension enable --py --sys-prefix qgrid
