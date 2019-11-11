@@ -14,10 +14,7 @@ services:
       - KBC_TOKEN
       - KBC_STORAGEAPI_URL
   sandbox:
-    build:
-      context: .
-      args:
-        NB_USER: ${NB_USER}
+    build: .
     image: keboola/docker-jupyter
     tty: true
     stdin_open: true

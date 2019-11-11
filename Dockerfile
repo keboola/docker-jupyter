@@ -1,9 +1,8 @@
 FROM quay.io/keboola/docker-custom-python:1.5.11
 
-ARG NB_USER
+ARG NB_USER="jupyter"
 ARG NB_UID="1000"
 ARG NB_GID="100"
-ENV NB_USER=$NB_USER
 
 USER root
 
@@ -56,6 +55,7 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 
 # Configure environment
 ENV SHELL /bin/bash
+ENV NB_USER $NB_USER
 ENV NB_UID $NB_UID
 ENV NB_GID $NB_GID
 ENV HOME /home/$NB_USER
@@ -126,7 +126,7 @@ RUN pip3 install --no-cache-dir \
     xlrd \
     qgrid
 
-# RUN fix-permissions /etc/jupyter
+RUN fix-permissions /etc/jupyter
 
 # Activate ipywidgets extension in the environment that runs the notebook server
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix \
@@ -136,10 +136,9 @@ RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix \
 ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 
-
 ### Custom stuff
 # Install KBC Transformation package
-RUN pip3 install --no-cache-dir --upgrade --user git+git://github.com/keboola/python-transformation.git@1.1.13
+RUN pip3 install --no-cache-dir --upgrade git+git://github.com/keboola/python-transformation.git@1.1.13
 
 EXPOSE 8888
 WORKDIR /data/
