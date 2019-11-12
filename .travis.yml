@@ -3,7 +3,7 @@ language: bash
 services:
   - docker
 before_script:
-  - docker-compose build
+  - docker build --tag keboola/docker-jupyter .
 deploy:
   provider: script
   skip_cleanup: true

@@ -1,12 +1,13 @@
 version: "3"
 
+# USED to simplify for local development/testing.  Provisioning uses ECS trait to do this.
 services:
   data-loader:
     image: quay.io/keboola/data-loader
     tty: true
     stdin_open: true
     volumes:
-      - data:/data/
+      - ./data:/data/
     environment:
       - KBC_CONFIG_ID
       - KBC_ROW_ID
@@ -19,13 +20,10 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - data:/data/
+      - ./data:/data/
     ports:
       - "8888:8888"
     environment:
       - PASSWORD=test
       - TAGS=[]
       - PACKAGES=[]
-
-volumes:
-  data:
