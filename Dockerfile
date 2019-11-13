@@ -154,6 +154,6 @@ COPY jupyter_notebook_config.py /etc/jupyter/
 COPY wait-for-it.sh /usr/local/bin/
 
 RUN fix-permissions /home/$NB_USER
-RUN chown -R $NB_USER:users /etc/jupyter/
+RUN chown -R $NB_USER:$NB_GID /etc/jupyter/
 
 USER $NB_UID
