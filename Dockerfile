@@ -66,8 +66,8 @@ ENV LANGUAGE en_US.UTF-8
 # Add a script that we will use to correct permissions after running certain commands
 ADD fix-permissions /usr/local/bin/fix-permissions
 
-# Create NB_USER wtih name jovyan user with UID=1000 and in the 'users' group
-# and make sure these dirs are writable by the `users` group.
+# Create NB_USER with NB_UID and in the NB_GID group
+# and make sure these dirs are writable by the NB_GID group.
 RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
     sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers && \
