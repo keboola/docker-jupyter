@@ -1,5 +1,6 @@
-version: "2"
+version: "3"
 
+# USED to simplify for local development/testing.  Provisioning uses ECS trait to do this.
 services:
   data-loader:
     image: quay.io/keboola/data-loader
@@ -12,16 +13,17 @@ services:
       - KBC_ROW_ID
       - KBC_CONFIG_VERSION
       - KBC_TOKEN
+      - KBC_STORAGEAPI_URL
   sandbox:
     build: .
     image: keboola/docker-jupyter
     tty: true
     stdin_open: true
-    volumes_from:
-      - data-loader
+    volumes:
+      - ./data:/data/
     ports:
       - "8888:8888"
     environment:
       - PASSWORD=test
-      - TAGS=["cat"]
-      - PACKAGES=["ccxt"]
+      - TAGS=[]
+      - PACKAGES=[]
