@@ -142,6 +142,7 @@ EXPOSE 8888
 WORKDIR /data/
 RUN fix-permissions /data
 
+# the datadir should now be owned by NB_UID
 USER $NB_UID
 CMD chmod -R 777 /data
 CMD chmod -R g+s /data
