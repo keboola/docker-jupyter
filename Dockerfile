@@ -142,6 +142,11 @@ EXPOSE 8888
 WORKDIR /data/
 RUN fix-permissions /data
 
+# the datadir should now be owned by NB_UID
+USER $NB_UID
+CMD chmod -R 777 /data
+CMD chmod -R g+s /data
+
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
 CMD ["start-notebook.sh"]
@@ -153,6 +158,7 @@ COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/
 COPY wait-for-it.sh /usr/local/bin/
 
+USER root
 RUN fix-permissions /home/$NB_USER
 RUN chown -R $NB_USER:$NB_GID /etc/jupyter/
 

@@ -21,10 +21,10 @@ if [ $UID == 0 ] ; then
         usermod -u $NB_UID $NB_USER
         # Careful: $HOME might resolve to /root depending on how the
         # container is started. Use the $NB_USER home path explicitly.
-        for d in "$CONDA_DIR" "$JULIA_PKGDIR" "/home/$NB_USER"; do
+        for d in "/data" "/home/$NB_USER"; do
             if [[ ! -z "$d" && -d "$d" ]]; then
                 echo "Set ownership to uid $NB_UID: $d"
-                chown -R $NB_UID "$d"
+                chown -R $NB_UID:$NB_GID "$d"
             fi
         done
     fi
