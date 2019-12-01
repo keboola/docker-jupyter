@@ -147,6 +147,9 @@ USER $NB_UID
 CMD chmod -R 777 /data
 CMD chmod -R g+s /data
 
+# add users local bin dir to PATH
+ENV PATH=/home/$NB_USER/.local/bin:$PATH
+
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
 CMD ["start-notebook.sh"]
