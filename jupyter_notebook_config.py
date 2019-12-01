@@ -49,7 +49,7 @@ if 'PACKAGES' in os.environ:
         sys.exit(152)
     if isinstance(packages, list):
         try:
-            app.install_packages(packages)
+            app.install_packages(packages, True)
         except ValueError as err:
             print('Failed to install packages', err, file=sys.stderr)
             sys.exit(153)
