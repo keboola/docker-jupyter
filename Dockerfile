@@ -136,7 +136,7 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 
 ### Custom stuff
 # Install KBC Transformation package
-RUN pip3 install --no-cache-dir --upgrade git+git://github.com/keboola/python-transformation.git@1.1.13
+RUN pip3 install --no-cache-dir --upgrade git+git://github.com/keboola/python-transformation.git@1.2.0
 
 EXPOSE 8888
 WORKDIR /data/
@@ -146,6 +146,9 @@ RUN fix-permissions /data
 USER $NB_UID
 CMD chmod -R 777 /data
 CMD chmod -R g+s /data
+
+# add users local bin dir to PATH
+ENV PATH=/home/$NB_USER/.local/bin:$PATH
 
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
