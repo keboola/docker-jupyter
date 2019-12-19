@@ -1,4 +1,4 @@
-FROM quay.io/keboola/docker-custom-python:1.5.11
+FROM quay.io/keboola/docker-custom-python:1.5.12
 
 ARG NB_USER="jupyter"
 ARG NB_UID="1000"
@@ -9,14 +9,14 @@ USER root
 # Taken from https://github.com/jupyter/docker-stacks/blob/master/minimal-notebook/Dockerfile
 
 # Install all OS dependencies for fully functional notebook server
-# libav-tools for matplotlib anim
+# ffmpeg for matplotlib anim
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     build-essential \
     emacs \
     git \
     inkscape \
     jed \
-    libav-tools \
+    ffmpeg \
     libsm6 \
     libxext-dev \
     libxrender1 \
