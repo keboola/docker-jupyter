@@ -1,4 +1,4 @@
-FROM quay.io/keboola/docker-custom-python:1.5.12
+FROM quay.io/keboola/docker-custom-python:1.6.0
 
 ARG NB_USER="jupyter"
 ARG NB_UID="1000"
@@ -136,7 +136,7 @@ RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 
 ### Custom stuff
 # Install KBC Transformation package
-RUN pip3 install --no-cache-dir --upgrade git+git://github.com/keboola/python-transformation.git@1.2.0
+RUN pip3 install --no-cache-dir --upgrade git+git://github.com/keboola/python-transformation.git@1.2.4
 
 EXPOSE 8888
 WORKDIR /data/
