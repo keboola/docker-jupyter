@@ -93,9 +93,6 @@ RUN mkdir /home/$NB_USER/work && \
 # run the pip installations as root
 USER root
 
-# update to latest pip
-RUN pip install --upgrade pip
-
 # Install Python 3 packages
 # Remove pyqt and qt pulled in for matplotlib since we're only ever going to
 # use notebook-friendly backends in these images
