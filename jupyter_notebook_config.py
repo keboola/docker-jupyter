@@ -6,11 +6,12 @@ import os
 import errno
 import stat
 import json
+import requests
 import sys
 from notebook.utils import to_api_path
 from kbc_transformation import transformation
 from keboola import docker
-from kbcstorage.client import Client
+
 
 # Jupyter config http://jupyter-notebook.readthedocs.io/en/latest/config.html
 c = get_config()
@@ -91,7 +92,7 @@ def script_post_save(model, os_path, contents_manager, **kwargs):
     if model['type'] != 'notebook':
         return
 
-    Client('https://connection.keboola.com', 'your-token')
+    Client(, )
     global _script_exporter
 
     if _script_exporter is None:
@@ -106,5 +107,29 @@ def script_post_save(model, os_path, contents_manager, **kwargs):
 
     with io.open(script_fname, 'w', encoding='utf-8') as f:
         f.write(script)
+
+def saveFile():
+        """
+        Construct a requests POST call with args and kwargs and process the
+        results.
+        Args:
+            *args: Positional arguments to pass to the post request.
+            **kwargs: Key word arguments to pass to the post request.
+        Returns:
+            body: Response body parsed from json.
+        Raises:
+            requests.HTTPError: If the API request fails.
+        """
+        headers = {'X-StorageApi-Token': token,
+                   'User-Agent': 'Keboola Sandbox Autosave Request'}
+        headers.update(self._auth_header)
+        r = requests.post(headers=headers, *args, **kwargs)
+        try:
+            r.raise_for_status()
+        except requests.HTTPError:
+            # Handle different error codes
+            raise
+        else:
+            return r.json()
 
 c.FileContentsManager.post_save_hook = script_post_save

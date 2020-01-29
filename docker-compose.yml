@@ -28,4 +28,4 @@ services:
       - TAGS=[]
       - PACKAGES
       - KBC_TOKEN
-
+      - HOSTNAME
