@@ -1,13 +1,16 @@
 # Copyright (c) Jupyter Development Team.
 from jupyter_core.paths import jupyter_data_dir
 import subprocess
+import io
 import os
 import errno
 import stat
 import json
 import sys
+from notebook.utils import to_api_path
 from kbc_transformation import transformation
 from keboola import docker
+from kbcstorage.client import Client
 
 # Jupyter config http://jupyter-notebook.readthedocs.io/en/latest/config.html
 c = get_config()
@@ -76,3 +79,32 @@ if 'TAGS' in os.environ:
             sys.exit(155)
     else:
         print('Tags variable is not an array.', file=sys.stderr)
+
+# setup hook on autosave
+_script_exporter = None
+
+def script_post_save(model, os_path, contents_manager, **kwargs):
+    """convert notebooks to Python script after save with nbconvert
+
+    replaces `jupyter notebook --script`
+    """
+    if model['type'] != 'notebook':
+        return
+
+    Client('https://connection.keboola.com', 'your-token')
+    global _script_exporter
+
+    if _script_exporter is None:
+        _script_exporter = ScriptExporter(parent=contents_manager)
+
+    log = contents_manager.log
+
+    base, ext = os.path.splitext(os_path)
+    script, resources = _script_exporter.from_filename(os_path)
+    script_fname = base + resources.get('output_extension', '.txt')
+    log.info("Saving script /%s", to_api_path(script_fname, contents_manager.root_dir))
+
+    with io.open(script_fname, 'w', encoding='utf-8') as f:
+        f.write(script)
+
+c.FileContentsManager.post_save_hook = script_post_save

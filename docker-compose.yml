@@ -27,3 +27,5 @@ services:
       - PASSWORD=test
       - TAGS=[]
       - PACKAGES
+      - KBC_TOKEN
+
