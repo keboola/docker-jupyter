@@ -26,8 +26,6 @@ c.NotebookApp.notebook_dir = '/data/'
 c.Session.debug = False
 # If not set, there is a permission problem with the /data/ directory
 c.NotebookApp.allow_root = True
-# Disabled because it breaks notebook_dir
-# c.FileContentsManager.root_dir = '/data'
 
 print("Initializing Jupyter.", file=sys.stderr)
 
@@ -81,8 +79,31 @@ if 'TAGS' in os.environ:
     else:
         print('Tags variable is not an array.', file=sys.stderr)
 
-# setup hook on autosave
-_script_exporter = None
+def saveFile(url, file_path, token):
+    """
+    Construct a requests POST call with args and kwargs and process the
+    results.
+    Args:
+        *args: Positional arguments to pass to the post request.
+        **kwargs: Key word arguments to pass to the post request.
+    Returns:
+        body: Response body parsed from json.
+    Raises:
+        requests.HTTPError: If the API request fails.
+    """
+
+    headers = {'X-StorageApi-Token': token, 'User-Agent': 'Keboola Sandbox Autosave Request'}
+    payload = {}
+    payload['file'] = {'source': file_path, 'tags': ['autosave']}
+
+    r = requests.post(url, payload, headers=headers, timeout=60)
+    try:
+        r.raise_for_status()
+    except requests.HTTPError:
+        # Handle different error codes
+        raise
+    else:
+        return r.json()
 
 def script_post_save(model, os_path, contents_manager, **kwargs):
     """convert notebooks to Python script after save with nbconvert
@@ -91,45 +112,23 @@ def script_post_save(model, os_path, contents_manager, **kwargs):
     """
     if model['type'] != 'notebook':
         return
-
-    Client(, )
-    global _script_exporter
-
-    if _script_exporter is None:
-        _script_exporter = ScriptExporter(parent=contents_manager)
-
     log = contents_manager.log
 
+    # get the host from env
+    host = os.environ['JUPYTER_HOST']
+    port = os.environ['EXTERNAL_PORT']
+    url = 'https://' + host + ':' + str(port) + '/data-loader-api/save'
+    log.info("The autosave url is: " + url)
     base, ext = os.path.splitext(os_path)
-    script, resources = _script_exporter.from_filename(os_path)
-    script_fname = base + resources.get('output_extension', '.txt')
-    log.info("Saving script /%s", to_api_path(script_fname, contents_manager.root_dir))
 
-    with io.open(script_fname, 'w', encoding='utf-8') as f:
-        f.write(script)
+    # get the token from env
+    token = None
+    if 'KBC_TOKEN' in os.environ:
+        token = os.environ['KBC_TOKEN']
+    else:
+        log.err("Could not find keboola api token.")
+    response = saveFile(url, os.path.relpath(os_path), token)
 
-def saveFile():
-        """
-        Construct a requests POST call with args and kwargs and process the
-        results.
-        Args:
-            *args: Positional arguments to pass to the post request.
-            **kwargs: Key word arguments to pass to the post request.
-        Returns:
-            body: Response body parsed from json.
-        Raises:
-            requests.HTTPError: If the API request fails.
-        """
-        headers = {'X-StorageApi-Token': token,
-                   'User-Agent': 'Keboola Sandbox Autosave Request'}
-        headers.update(self._auth_header)
-        r = requests.post(headers=headers, *args, **kwargs)
-        try:
-            r.raise_for_status()
-        except requests.HTTPError:
-            # Handle different error codes
-            raise
-        else:
-            return r.json()
+
 
 c.FileContentsManager.post_save_hook = script_post_save
