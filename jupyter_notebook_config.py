@@ -94,9 +94,10 @@ def saveFile(file_path, token):
 
     url = 'http://data-loader-api/data-loader-api/save'
     headers = {'X-StorageApi-Token': token, 'User-Agent': 'Keboola Sandbox Autosave Request'}
-    payload = {}
-    payload['file'] = {'source': file_path, 'tags': ['autosave']}
+    payload = {'file':{'source': file_path, 'tags': ['autosave']}}
 
+    # the timeout is set to > 3min because of the delay on 400 level exception responses
+    # https://keboola.atlassian.net/browse/PS-186
     r = requests.post(url, json=payload, headers=headers, timeout=240)
     try:
         r.raise_for_status()
@@ -119,8 +120,14 @@ def script_post_save(model, os_path, contents_manager, **kwargs):
     if 'KBC_TOKEN' in os.environ:
         token = os.environ['KBC_TOKEN']
     else:
-        log.error("Could not find the keboola api token.")
-    response = saveFile(os.path.relpath(os_path), token)
-    log.info("Successfully saved to keboola")
+        log.error('Could not find the keboola api token.')
+        raise Exception('Could not find the keboola api token.')
+    try:
+        response = saveFile(os.path.relpath(os_path), token)
+    except requests.HTTPError:
+        log.error('Error saving notebook:' + response.json())
+        raise
+
+    log.info("Successfully saved the notebook to keboola connection")
 
 c.FileContentsManager.post_save_hook = script_post_save
