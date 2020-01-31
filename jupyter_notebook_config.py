@@ -92,12 +92,12 @@ def saveFile(file_path, token):
         requests.HTTPError: If the API request fails.
     """
 
-    url = 'https://data-loader-api/data-loader-api/save'
+    url = 'http://data-loader-api/data-loader-api/save'
     headers = {'X-StorageApi-Token': token, 'User-Agent': 'Keboola Sandbox Autosave Request'}
     payload = {}
     payload['file'] = {'source': file_path, 'tags': ['autosave']}
 
-    r = requests.post(url, payload, headers=headers, timeout=90, verify=False)
+    r = requests.post(url, json=payload, headers=headers, timeout=240)
     try:
         r.raise_for_status()
     except requests.HTTPError:
