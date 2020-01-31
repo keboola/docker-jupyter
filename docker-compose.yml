@@ -28,5 +28,3 @@ services:
       - TAGS=[]
       - PACKAGES
       - KBC_TOKEN
-      - JUPYTER_HOST
-      - EXTERNAL_PORT
