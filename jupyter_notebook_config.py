@@ -119,7 +119,8 @@ def script_post_save(model, os_path, contents_manager, **kwargs):
     if 'KBC_TOKEN' in os.environ:
         token = os.environ['KBC_TOKEN']
     else:
-        log.err("Could not find the keboola api token.")
-    response = saveFile(url, os.path.relpath(os_path), token)
+        log.error("Could not find the keboola api token.")
+    response = saveFile(os.path.relpath(os_path), token)
+    log.info("Successfully saved to keboola")
 
 c.FileContentsManager.post_save_hook = script_post_save
