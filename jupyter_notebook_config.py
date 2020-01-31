@@ -120,14 +120,14 @@ def script_post_save(model, os_path, contents_manager, **kwargs):
     if 'KBC_TOKEN' in os.environ:
         token = os.environ['KBC_TOKEN']
     else:
-        log.error('Could not find the keboola api token.')
-        raise Exception('Could not find the keboola api token.')
+        log.error('Could not find the Keboola Storage API token.')
+        raise Exception('Could not find the Keboola Storage API token.')
     try:
         response = saveFile(os.path.relpath(os_path), token)
     except requests.HTTPError:
         log.error('Error saving notebook:' + response.json())
         raise
 
-    log.info("Successfully saved the notebook to keboola connection")
+    log.info("Successfully saved the notebook to Keboola Connection")
 
 c.FileContentsManager.post_save_hook = script_post_save
