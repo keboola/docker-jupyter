@@ -1,4 +1,4 @@
-FROM quay.io/keboola/docker-custom-python:1.6.2
+FROM quay.io/keboola/docker-custom-python:1.6.3
 
 ARG NB_USER="jupyter"
 ARG NB_UID="1000"
@@ -138,11 +138,14 @@ RUN pip3 install --no-cache-dir --upgrade git+git://github.com/keboola/python-tr
 EXPOSE 8888
 WORKDIR /data/
 RUN fix-permissions /data
+RUN fix-permissions /tmp
 
 # the datadir should now be owned by NB_UID
 USER $NB_UID
 CMD chmod -R 777 /data
 CMD chmod -R g+s /data
+CMD chmod -R 777 /tmp
+CMD chmod -R g+s /tmp
 
 # add users local bin dir to PATH
 ENV PATH=/home/$NB_USER/.local/bin:$PATH
