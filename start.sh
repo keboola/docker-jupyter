@@ -10,7 +10,9 @@ if [ -z ${PASSWORD+x} ] ; then
     exit 2
 fi
 
-/usr/local/bin/wait-for-it.sh -t 0 data-loader:80 -- echo "Data loader is up"
+if [ "$SKIP_WAIT_FOR_IT" = "" ]; then
+    /usr/local/bin/wait-for-it.sh -t 0 data-loader:80 -- echo "Data loader is up"
+fi
 #jupyter trust /notebooks/notebook.ipynb
 
 # Handle special flags if we're root

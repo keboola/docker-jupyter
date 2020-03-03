@@ -17,7 +17,7 @@ from keboola import docker
 c = get_config()
 if 'HOSTNAME' in os.environ:
     c.NotebookApp.ip = os.environ['HOSTNAME']
-else:    
+else:
     c.NotebookApp.ip = '*'
 c.NotebookApp.port = 8888
 c.NotebookApp.open_browser = False
@@ -37,6 +37,9 @@ if 'PASSWORD' in os.environ and os.environ['PASSWORD']:
 else:
     print('Password must be provided.')
     sys.exit(150)
+
+if 'ROOT_DIR' in os.environ and os.environ['ROOT_DIR']:
+    c.NotebookApp.base_url = os.environ['ROOT_DIR']
 
 # jupyter trust /path/to/notebook.ipynb
 
@@ -91,8 +94,10 @@ def saveFile(file_path, token):
     Raises:
         requests.HTTPError: If the API request fails.
     """
-
-    url = 'http://data-loader-api/data-loader-api/save'
+    if 'DATA_LOADER_API_URL' in os.environ and os.environ['DATA_LOADER_API_URL']:
+        url = 'http://' + os.environ['DATA_LOADER_API_URL'] + '/data-loader-api/save'
+    else:
+        url = 'http://data-loader-api/data-loader-api/save'
     headers = {'X-StorageApi-Token': token, 'User-Agent': 'Keboola Sandbox Autosave Request'}
     payload = {'file':{'source': file_path, 'tags': ['autosave']}}
 
