@@ -1,0 +1,9 @@
+FROM continuumio/miniconda3:4.7.12
+
+RUN pip install mlflow \
+    && pip install azure-storage \
+    && pip install numpy \
+    && pip install scipy \
+    && pip install pandas \
+    && pip install scikit-learn \
+    && pip install cloudpickle

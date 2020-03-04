@@ -28,3 +28,12 @@ services:
       - TAGS=[]
       - PACKAGES
       - KBC_TOKEN
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    image: mlflow
+    command: mlflow server --host 0.0.0.0
+    ports:
+      - "5001:5000"

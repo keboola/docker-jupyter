@@ -121,7 +121,8 @@ RUN pip3 install --no-cache-dir \
     vincent \
     beautifulsoup4 \
     xlrd \
-    qgrid
+    qgrid \
+    mlflow
 
 # Activate ipywidgets extension in the environment that runs the notebook server
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix \
@@ -152,10 +153,11 @@ ENV PATH=/home/$NB_USER/.local/bin:$PATH
 
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
-CMD ["start-notebook.sh"]
+CMD ["start-lab.sh"]
 
 # Add local files as late as possible to avoid cache busting
 COPY start.sh /usr/local/bin/
+COPY start-lab.sh /usr/local/bin/
 COPY start-notebook.sh /usr/local/bin/
 COPY start-singleuser.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /etc/jupyter/

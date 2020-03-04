@@ -17,7 +17,7 @@ from keboola import docker
 c = get_config()
 if 'HOSTNAME' in os.environ:
     c.NotebookApp.ip = os.environ['HOSTNAME']
-else:    
+else:
     c.NotebookApp.ip = '*'
 c.NotebookApp.port = 8888
 c.NotebookApp.open_browser = False
