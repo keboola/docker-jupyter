@@ -1,4 +1,4 @@
-FROM quay.io/keboola/docker-custom-python:2.0.4
+FROM quay.io/keboola/docker-custom-python:2.5.2
 
 ARG NB_USER="jupyter"
 ARG NB_UID="1000"
