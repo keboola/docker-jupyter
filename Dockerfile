@@ -1,4 +1,4 @@
-FROM quay.io/keboola/docker-custom-python:2.5.2
+FROM quay.io/keboola/docker-custom-python:4.0.0
 
 ARG NB_USER="jupyter"
 ARG NB_UID="1000"
@@ -139,13 +139,11 @@ EXPOSE 8888
 WORKDIR /data/
 RUN fix-permissions /data
 RUN fix-permissions /tmp
+# To make it possible to uninstall currently installed packages
+RUN chmod a+rwx -R /home/default
 
 # the datadir should now be owned by NB_UID
 USER $NB_UID
-CMD chmod -R 777 /data
-CMD chmod -R g+s /data
-CMD chmod -R 777 /tmp
-CMD chmod -R g+s /tmp
 
 # add users local bin dir to PATH
 ENV PATH=/home/$NB_USER/.local/bin:$PATH
@@ -153,6 +151,10 @@ ENV PATH=/home/$NB_USER/.local/bin:$PATH
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
 CMD ["start-notebook.sh"]
+
+# Import matplotlib the first time to build the font cache.
+ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
+RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 
 # Add local files as late as possible to avoid cache busting
 COPY start.sh /usr/local/bin/
