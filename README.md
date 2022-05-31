@@ -11,3 +11,7 @@ To run locally use the `.env.template` file to create an `.env` file. Create a p
 - `PACKAGES` - optional JSON array with packages to preinstall, use `[]` to install no packages
 
 Run `docker-compose up`, the notebook will be avaiable at `http://localhost:8888`. Password is `test`, can be changed in `docker-compose.yml`.
+
+## License
+
+MIT licensed, see [LICENSE](./LICENSE) file.
